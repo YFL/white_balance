@@ -23,7 +23,8 @@ namespace WhiteBalance
             OpenFileDialog ofd = new OpenFileDialog();
             if(ofd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
-                MessageBox.Show(ofd.FileName);
+                //MessageBox.Show(ofd.FileName);
+                pictureBox1.Image = ImageLoader.LoadImage(ofd.FilaName);
             }
         }
 
