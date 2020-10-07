@@ -64,6 +64,7 @@
             this.OpenPicture.Location = new System.Drawing.Point(98, 115);
             this.OpenPicture.Name = "OpenPicture";
             this.OpenPicture.Size = new System.Drawing.Size(520, 435);
+            this.OpenPicture.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.OpenPicture.TabIndex = 2;
             this.OpenPicture.TabStop = false;
             // 
@@ -72,6 +73,7 @@
             this.pictureBox2.Location = new System.Drawing.Point(643, 115);
             this.pictureBox2.Name = "pictureBox2";
             this.pictureBox2.Size = new System.Drawing.Size(520, 435);
+            this.pictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox2.TabIndex = 3;
             this.pictureBox2.TabStop = false;
             // 
