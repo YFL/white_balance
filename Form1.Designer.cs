@@ -28,61 +28,96 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.button1 = new System.Windows.Forms.Button();
-            this.button2 = new System.Windows.Forms.Button();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.OpenButton = new System.Windows.Forms.Button();
+            this.SaveButton = new System.Windows.Forms.Button();
+            this.OpenPicture = new System.Windows.Forms.PictureBox();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            this.GreyButton = new System.Windows.Forms.Button();
+            this.WhiteButton = new System.Windows.Forms.Button();
+            this.IterativeButton = new System.Windows.Forms.Button();
+            ((System.ComponentModel.ISupportInitialize)(this.OpenPicture)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             this.SuspendLayout();
             // 
-            // button1
+            // OpenButton
             // 
-            this.button1.Location = new System.Drawing.Point(193, 93);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(80, 25);
-            this.button1.TabIndex = 0;
-            this.button1.Text = "Open file";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.OpenButton.Location = new System.Drawing.Point(25, 25);
+            this.OpenButton.Name = "OpenButton";
+            this.OpenButton.Size = new System.Drawing.Size(80, 25);
+            this.OpenButton.TabIndex = 0;
+            this.OpenButton.Text = "Open file";
+            this.OpenButton.UseVisualStyleBackColor = true;
+            this.OpenButton.Click += new System.EventHandler(this.button1_Click);
             // 
-            // button2
+            // SaveButton
             // 
-            this.button2.Location = new System.Drawing.Point(420, 93);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(80, 25);
-            this.button2.TabIndex = 1;
-            this.button2.Text = "Save file";
-            this.button2.UseVisualStyleBackColor = true;
-            this.button2.Click += new System.EventHandler(this.button2_Click);
+            this.SaveButton.Location = new System.Drawing.Point(111, 25);
+            this.SaveButton.Name = "SaveButton";
+            this.SaveButton.Size = new System.Drawing.Size(80, 25);
+            this.SaveButton.TabIndex = 1;
+            this.SaveButton.Text = "Save file";
+            this.SaveButton.UseVisualStyleBackColor = true;
+            this.SaveButton.Click += new System.EventHandler(this.button2_Click);
             // 
-            // pictureBox1
+            // OpenPicture
             // 
-            this.pictureBox1.Location = new System.Drawing.Point(193, 207);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(100, 50);
-            this.pictureBox1.TabIndex = 2;
-            this.pictureBox1.TabStop = false;            // 
+            this.OpenPicture.Location = new System.Drawing.Point(98, 115);
+            this.OpenPicture.Name = "OpenPicture";
+            this.OpenPicture.Size = new System.Drawing.Size(520, 435);
+            this.OpenPicture.TabIndex = 2;
+            this.OpenPicture.TabStop = false;
+            // 
             // pictureBox2
             // 
-            this.pictureBox2.Location = new System.Drawing.Point(420, 207);
+            this.pictureBox2.Location = new System.Drawing.Point(643, 115);
             this.pictureBox2.Name = "pictureBox2";
-            this.pictureBox2.Size = new System.Drawing.Size(100, 50);
+            this.pictureBox2.Size = new System.Drawing.Size(520, 435);
             this.pictureBox2.TabIndex = 3;
             this.pictureBox2.TabStop = false;
+            // 
+            // GreyButton
+            // 
+            this.GreyButton.Location = new System.Drawing.Point(12, 56);
+            this.GreyButton.Name = "GreyButton";
+            this.GreyButton.Size = new System.Drawing.Size(80, 25);
+            this.GreyButton.TabIndex = 4;
+            this.GreyButton.Text = "Grey";
+            this.GreyButton.UseVisualStyleBackColor = true;
+            // 
+            // WhiteButton
+            // 
+            this.WhiteButton.Location = new System.Drawing.Point(98, 56);
+            this.WhiteButton.Name = "WhiteButton";
+            this.WhiteButton.Size = new System.Drawing.Size(80, 25);
+            this.WhiteButton.TabIndex = 5;
+            this.WhiteButton.Text = "White";
+            this.WhiteButton.UseVisualStyleBackColor = true;
+            // 
+            // IterativeButton
+            // 
+            this.IterativeButton.Location = new System.Drawing.Point(184, 56);
+            this.IterativeButton.Name = "IterativeButton";
+            this.IterativeButton.Size = new System.Drawing.Size(80, 25);
+            this.IterativeButton.TabIndex = 6;
+            this.IterativeButton.Text = "Iterative";
+            this.IterativeButton.UseVisualStyleBackColor = true;
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.AutoSize = true;
+            this.ClientSize = new System.Drawing.Size(1199, 561);
+            this.Controls.Add(this.IterativeButton);
+            this.Controls.Add(this.WhiteButton);
+            this.Controls.Add(this.GreyButton);
             this.Controls.Add(this.pictureBox2);
-            this.Controls.Add(this.pictureBox1);
-            this.Controls.Add(this.button2);
-            this.Controls.Add(this.button1);
+            this.Controls.Add(this.OpenPicture);
+            this.Controls.Add(this.SaveButton);
+            this.Controls.Add(this.OpenButton);
             this.Name = "Form1";
             this.Text = "Form1";
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.OpenPicture)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
             this.ResumeLayout(false);
 
@@ -90,10 +125,13 @@
 
         #endregion
 
-        private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.Button button2;
-        private System.Windows.Forms.PictureBox pictureBox1;
+        private System.Windows.Forms.Button OpenButton;
+        private System.Windows.Forms.Button SaveButton;
+        private System.Windows.Forms.PictureBox OpenPicture;
         private System.Windows.Forms.PictureBox pictureBox2;
+        private System.Windows.Forms.Button GreyButton;
+        private System.Windows.Forms.Button WhiteButton;
+        private System.Windows.Forms.Button IterativeButton;
     }
 }
 
