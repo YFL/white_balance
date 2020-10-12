@@ -31,12 +31,12 @@
             this.OpenButton = new System.Windows.Forms.Button();
             this.SaveButton = new System.Windows.Forms.Button();
             this.OpenPicture = new System.Windows.Forms.PictureBox();
-            this.pictureBox2 = new System.Windows.Forms.PictureBox();
+            this.ModifiedPicture = new System.Windows.Forms.PictureBox();
             this.GreyButton = new System.Windows.Forms.Button();
             this.WhiteButton = new System.Windows.Forms.Button();
             this.IterativeButton = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.OpenPicture)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.ModifiedPicture)).BeginInit();
             this.SuspendLayout();
             // 
             // OpenButton
@@ -68,14 +68,14 @@
             this.OpenPicture.TabIndex = 2;
             this.OpenPicture.TabStop = false;
             // 
-            // pictureBox2
+            // ModifiedPicture
             // 
-            this.pictureBox2.Location = new System.Drawing.Point(643, 115);
-            this.pictureBox2.Name = "pictureBox2";
-            this.pictureBox2.Size = new System.Drawing.Size(520, 435);
-            this.pictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBox2.TabIndex = 3;
-            this.pictureBox2.TabStop = false;
+            this.ModifiedPicture.Location = new System.Drawing.Point(643, 115);
+            this.ModifiedPicture.Name = "ModifiedPicture";
+            this.ModifiedPicture.Size = new System.Drawing.Size(520, 435);
+            this.ModifiedPicture.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.ModifiedPicture.TabIndex = 3;
+            this.ModifiedPicture.TabStop = false;
             // 
             // GreyButton
             // 
@@ -85,6 +85,7 @@
             this.GreyButton.TabIndex = 4;
             this.GreyButton.Text = "Grey";
             this.GreyButton.UseVisualStyleBackColor = true;
+            this.GreyButton.Click += new System.EventHandler(this.GreyButton_Click);
             // 
             // WhiteButton
             // 
@@ -113,14 +114,14 @@
             this.Controls.Add(this.IterativeButton);
             this.Controls.Add(this.WhiteButton);
             this.Controls.Add(this.GreyButton);
-            this.Controls.Add(this.pictureBox2);
+            this.Controls.Add(this.ModifiedPicture);
             this.Controls.Add(this.OpenPicture);
             this.Controls.Add(this.SaveButton);
             this.Controls.Add(this.OpenButton);
             this.Name = "Form1";
             this.Text = "Form1";
             ((System.ComponentModel.ISupportInitialize)(this.OpenPicture)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.ModifiedPicture)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -130,7 +131,7 @@
         private System.Windows.Forms.Button OpenButton;
         private System.Windows.Forms.Button SaveButton;
         private System.Windows.Forms.PictureBox OpenPicture;
-        private System.Windows.Forms.PictureBox pictureBox2;
+        private System.Windows.Forms.PictureBox ModifiedPicture;
         private System.Windows.Forms.Button GreyButton;
         private System.Windows.Forms.Button WhiteButton;
         private System.Windows.Forms.Button IterativeButton;

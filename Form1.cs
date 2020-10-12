@@ -24,8 +24,6 @@ namespace WhiteBalance
             if(ofd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
                 OpenPicture.Image = white_balance.ImageLoader.LoadImage(ofd.FileName);
-
-                OpenPicture.Image = white_balance.ImageLoader.LoadImage(ofd.FileName);
             }
         }
 
@@ -37,6 +35,14 @@ namespace WhiteBalance
                 string path = sfd.FileName;
                 BinaryWriter bw = new BinaryWriter(File.Create(path));
                 bw.Dispose();
+            }
+        }
+
+        private void GreyButton_Click(object sender, EventArgs e)
+        {
+            if(OpenPicture.Image != null)
+            {
+                ModifiedPicture.Image = Algorithms.GrayWorld(OpenPicture.Image);
             }
         }
     }
