@@ -176,7 +176,7 @@ namespace WhiteBalance
             {
                 for (int x = 0; x < bm.Width; x++)
                 {
-                    for(int y = 0; y < bm.Width; y++)
+                    for(int y = 0; y < bm.Height; y++)
                     {
                         uint intensity = 0;
                         switch(channel)

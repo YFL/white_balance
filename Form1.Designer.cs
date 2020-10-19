@@ -36,17 +36,17 @@
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.GreyButton = new System.Windows.Forms.Button();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.GreenScaleSpinBox = new System.Windows.Forms.NumericUpDown();
+            this.WhiteButton = new System.Windows.Forms.Button();
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.IterativeButton = new System.Windows.Forms.Button();
-            this.WhiteButton = new System.Windows.Forms.Button();
-            this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
             ((System.ComponentModel.ISupportInitialize)(this.OpenPicture)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ModifiedPicture)).BeginInit();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.GreenScaleSpinBox)).BeginInit();
             this.tabPage3.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
             this.SuspendLayout();
             // 
             // OpenButton
@@ -57,7 +57,7 @@
             this.OpenButton.TabIndex = 0;
             this.OpenButton.Text = "Open file";
             this.OpenButton.UseVisualStyleBackColor = true;
-            this.OpenButton.Click += new System.EventHandler(this.button1_Click);
+            this.OpenButton.Click += new System.EventHandler(this.OpenButton_Click);
             // 
             // SaveButton
             // 
@@ -67,7 +67,7 @@
             this.SaveButton.TabIndex = 1;
             this.SaveButton.Text = "Save file";
             this.SaveButton.UseVisualStyleBackColor = true;
-            this.SaveButton.Click += new System.EventHandler(this.button2_Click);
+            this.SaveButton.Click += new System.EventHandler(this.SaveButton_Click);
             // 
             // OpenPicture
             // 
@@ -104,7 +104,7 @@
             this.tabPage1.Location = new System.Drawing.Point(4, 25);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(242, 49);
+            this.tabPage1.Size = new System.Drawing.Size(275, 49);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Grey World";
             this.tabPage1.UseVisualStyleBackColor = true;
@@ -121,7 +121,7 @@
             // 
             // tabPage2
             // 
-            this.tabPage2.Controls.Add(this.numericUpDown1);
+            this.tabPage2.Controls.Add(this.GreenScaleSpinBox);
             this.tabPage2.Controls.Add(this.WhiteButton);
             this.tabPage2.Location = new System.Drawing.Point(4, 25);
             this.tabPage2.Name = "tabPage2";
@@ -131,13 +131,51 @@
             this.tabPage2.Text = "White Patch";
             this.tabPage2.UseVisualStyleBackColor = true;
             // 
+            // GreenScaleSpinBox
+            // 
+            this.GreenScaleSpinBox.DecimalPlaces = 2;
+            this.GreenScaleSpinBox.Increment = new decimal(new int[] {
+            5,
+            0,
+            0,
+            65536});
+            this.GreenScaleSpinBox.Location = new System.Drawing.Point(92, 11);
+            this.GreenScaleSpinBox.Maximum = new decimal(new int[] {
+            255,
+            0,
+            0,
+            0});
+            this.GreenScaleSpinBox.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.GreenScaleSpinBox.Name = "GreenScaleSpinBox";
+            this.GreenScaleSpinBox.Size = new System.Drawing.Size(120, 22);
+            this.GreenScaleSpinBox.TabIndex = 9;
+            this.GreenScaleSpinBox.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            // 
+            // WhiteButton
+            // 
+            this.WhiteButton.Location = new System.Drawing.Point(6, 8);
+            this.WhiteButton.Name = "WhiteButton";
+            this.WhiteButton.Size = new System.Drawing.Size(80, 25);
+            this.WhiteButton.TabIndex = 8;
+            this.WhiteButton.Text = "White";
+            this.WhiteButton.UseVisualStyleBackColor = true;
+            this.WhiteButton.Click += new System.EventHandler(this.WhiteButton_Click);
+            // 
             // tabPage3
             // 
             this.tabPage3.Controls.Add(this.IterativeButton);
             this.tabPage3.Location = new System.Drawing.Point(4, 25);
             this.tabPage3.Name = "tabPage3";
             this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage3.Size = new System.Drawing.Size(242, 49);
+            this.tabPage3.Size = new System.Drawing.Size(275, 49);
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "Iterative WB";
             this.tabPage3.UseVisualStyleBackColor = true;
@@ -150,22 +188,6 @@
             this.IterativeButton.TabIndex = 8;
             this.IterativeButton.Text = "Iterative";
             this.IterativeButton.UseVisualStyleBackColor = true;
-            // 
-            // WhiteButton
-            // 
-            this.WhiteButton.Location = new System.Drawing.Point(6, 8);
-            this.WhiteButton.Name = "WhiteButton";
-            this.WhiteButton.Size = new System.Drawing.Size(80, 25);
-            this.WhiteButton.TabIndex = 8;
-            this.WhiteButton.Text = "White";
-            this.WhiteButton.UseVisualStyleBackColor = true;
-            // 
-            // numericUpDown1
-            // 
-            this.numericUpDown1.Location = new System.Drawing.Point(92, 11);
-            this.numericUpDown1.Name = "numericUpDown1";
-            this.numericUpDown1.Size = new System.Drawing.Size(120, 22);
-            this.numericUpDown1.TabIndex = 9;
             // 
             // Form1
             // 
@@ -185,8 +207,8 @@
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.tabPage2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.GreenScaleSpinBox)).EndInit();
             this.tabPage3.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -204,7 +226,7 @@
         private System.Windows.Forms.Button GreyButton;
         private System.Windows.Forms.Button WhiteButton;
         private System.Windows.Forms.Button IterativeButton;
-        private System.Windows.Forms.NumericUpDown numericUpDown1;
+        private System.Windows.Forms.NumericUpDown GreenScaleSpinBox;
     }
 }
 
