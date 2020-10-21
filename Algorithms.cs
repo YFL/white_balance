@@ -15,7 +15,7 @@ namespace WhiteBalance
             D_Color means = Means(img);
             var pixel_count = img.Width * img.Height;
             double r_factor = means.g / means.r;
-            double b_factor = means.b / means.b;
+            double b_factor = means.g / means.b;
 
             var original = new Bitmap(img);
             var ret = new Bitmap(img.Width, img.Height);
