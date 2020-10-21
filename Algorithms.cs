@@ -12,10 +12,10 @@ namespace WhiteBalance
     {
         public static Bitmap GrayWorld(Image img)
         {
-            Color means = Means(img);
+            D_Color means = Means(img);
             var pixel_count = img.Width * img.Height;
-            float r_factor = (float)means.G / means.R;
-            float b_factor = (float)means.G / means.B;
+            double r_factor = means.g / means.r;
+            double b_factor = means.b / means.b;
 
             var original = new Bitmap(img);
             var ret = new Bitmap(img.Width, img.Height);
@@ -36,27 +36,25 @@ namespace WhiteBalance
 
         public static Bitmap WhitePatch(Image img, double green_scale)
         {
-            Color maxes = Maxes(img);
-            Color means = Means(img);
+            D_Color maxes = Maxes(img);
+            D_Color means = Means(img);
             var pixel_count = img.Width * img.Height;
             // equation right side
 
             // first equation
-            uint g_avg_x_dimensions = (uint)(means.G * pixel_count);
-            // second equation
-            uint g_max_scaled = (uint)(maxes.G * green_scale);
+            double g_avg_x_dimensions = means.g * pixel_count;
 
             // equation left side
 
             // first equation
-            UInt64 r_quadratic_sum = QuadraticSum(img, 0);
-            UInt64 b_quadratic_sum = QuadraticSum(img, 2);
-            uint r_sum = Sum(img, 0);
-            uint b_sum = Sum(img, 2);
+            double r_quadratic_sum = QuadraticSum(img, 0);
+            double b_quadratic_sum = QuadraticSum(img, 2);
+            double r_sum = Sum(img, 0);
+            double b_sum = Sum(img, 2);
 
             // second equation
-            uint r_max_squared = (byte)(maxes.R * maxes.R);
-            uint b_max_squared = (byte)(maxes.B * maxes.B);
+            uint r_max_squared = (byte)(maxes.r * maxes.r);
+            uint b_max_squared = (byte)(maxes.b * maxes.b);
 
             Bitmap bm = new Bitmap(img);
             for(int x = 0; x < bm.Width; x++)
@@ -65,9 +63,29 @@ namespace WhiteBalance
                 {
                     Color pixel = bm.GetPixel(x, y);
                     bm.SetPixel(x, y, Color.FromArgb(
-                        AdjustChannel_WhitePatch(pixel.R, r_quadratic_sum, r_sum, r_max_squared, maxes.R, g_avg_x_dimensions, maxes.G, green_scale),
+                        AdjustChannel_WhitePatch(pixel.R, r_quadratic_sum, r_sum, r_max_squared, maxes.r, g_avg_x_dimensions, maxes.g, green_scale),
                         pixel.G,
-                        AdjustChannel_WhitePatch(pixel.B, b_quadratic_sum, b_sum, b_max_squared, maxes.B, g_avg_x_dimensions, maxes.G, green_scale)));
+                        AdjustChannel_WhitePatch(pixel.B, b_quadratic_sum, b_sum, b_max_squared, maxes.r, g_avg_x_dimensions, maxes.g, green_scale)));
+                }
+            }
+
+            return bm;
+        }
+
+        public static Bitmap WhitePatch2(Image img, double green_scale)
+        {
+            D_Color maxes = Maxes(img);
+            double alfa = maxes.g / maxes.r;
+            double beta = maxes.g / maxes.b;
+
+            Bitmap bm = new Bitmap(img);
+            for (int x = 0; x < bm.Width; x++)
+            {
+                for (int y = 0; y < bm.Height; y++)
+                {
+                    var pixel = bm.GetPixel(x, y);
+                    bm.SetPixel(x, y,
+                        Color.FromArgb((byte)(alfa * pixel.R), pixel.G, (byte)(beta * pixel.B)));
                 }
             }
 
@@ -79,9 +97,9 @@ namespace WhiteBalance
             return new Bitmap(1, 1);
         }
 
-        private static Color Means(Image img)
+        private static D_Color Means(Image img)
         {
-            int r, g, b;
+            double r, g, b;
             r = g = b = 0;
             using (var bm = new Bitmap(img))
             {
@@ -101,10 +119,10 @@ namespace WhiteBalance
                 b /= pixel_count;
             }
 
-            return Color.FromArgb((int)r, (int)g, (int)b);
+            return new D_Color { r = r, g = g, b = b };
         }
 
-        private static Color Maxes(Image img)
+        private static D_Color Maxes(Image img)
         {
             int r, g, b;
             r = g = b = 0;
@@ -124,7 +142,22 @@ namespace WhiteBalance
                 }
             }
 
-            return Color.FromArgb(r, g, b);
+            return new D_Color { r = r, g = g, b = b };
+        }
+
+        private static byte GetChannel(Color pixel, byte channel)
+        {
+            switch (channel)
+            {
+                case 0:
+                    return pixel.R;
+                case 1:
+                    return pixel.G;
+                case 2:
+                    return pixel.B;
+                default:
+                    throw new Exception("Channel HAS TO BE 0, 1 or 2. Nothing else is accepted");
+            }
         }
 
         /**
@@ -132,30 +165,17 @@ namespace WhiteBalance
         * @param channel allowed values = {0, 1, 2} 0 - red, ... ,2 - blue
         * @return the sum of the intensities of the given channel
         */
-        private static uint Sum(Image img, byte channel)
+        private static double Sum(Image img, byte channel)
         {
-            uint sum = 0;
+            double sum = 0;
             using (var bm = new Bitmap(img))
             {
                 for(int x = 0; x < bm.Width; x++)
                 {
                     for(int y = 0; y < bm.Height; y++)
                     {
-                        uint intensity = 0;
-                        switch (channel)
-                        {
-                            case 0:
-                                intensity = bm.GetPixel(x, y).R;
-                                break;
-                            case 1:
-                                intensity = bm.GetPixel(x, y).G;
-                                break;
-                            case 2:
-                                intensity = bm.GetPixel(x, y).B;
-                                break;
-                            default:
-                                throw new Exception("Channel HAS TO BE 0, 1 or 2. Nothing else is accepted");
-                        }
+                        Color pixel = bm.GetPixel(x, y);
+                        uint intensity = GetChannel(pixel, channel);
                         sum += intensity;
                     }
                 }
@@ -169,30 +189,17 @@ namespace WhiteBalance
          * @param channel allowed values = {0, 1, 2} 0 - red, ... ,2 - blue
          * @return the sum of the square of the intensities of the given channel
          */
-        private static UInt64 QuadraticSum(Image img, byte channel)
+        private static double QuadraticSum(Image img, byte channel)
         {
-            UInt64 sum = 0;
+            double sum = 0;
             using (var bm = new Bitmap(img))
             {
                 for (int x = 0; x < bm.Width; x++)
                 {
                     for(int y = 0; y < bm.Height; y++)
                     {
-                        uint intensity = 0;
-                        switch(channel)
-                        {
-                            case 0:
-                                intensity = bm.GetPixel(x, y).R;
-                                break;
-                            case 1:
-                                intensity = bm.GetPixel(x, y).G;
-                                break;
-                            case 2:
-                                intensity = bm.GetPixel(x, y).B;
-                                break;
-                            default:
-                                throw new Exception("Channel HAS TO BE 0, 1 or 2. Nothing else is accepted");
-                        }
+                        Color pixel = bm.GetPixel(x, y);
+                        uint intensity = GetChannel(pixel, channel);
                         sum += intensity * intensity;
                     }
                 }
@@ -201,7 +208,7 @@ namespace WhiteBalance
             return sum;
         }
 
-        private static byte AdjustChannel_WhitePatch(byte intensity, UInt64 channel_quadratic_sum, UInt64 channel_sum, uint channel_max_squared, byte channel_max, uint g_avg_x_dimensions, uint g_max, double g_scale)
+        private static byte AdjustChannel_WhitePatch(byte intensity, double channel_quadratic_sum, double channel_sum, double channel_max_squared, double channel_max, double g_avg_x_dimensions, double g_max, double g_scale)
         {
             // u * intensity_squared + v * intensity
 
@@ -210,13 +217,13 @@ namespace WhiteBalance
              * | channel_max_squared      channel_max | | v |   | g_max_scaled       |
              */
 
-            UInt64 determinant = channel_quadratic_sum * channel_max - (channel_sum * channel_max_squared);
+            double determinant = channel_quadratic_sum * channel_max - (channel_sum * channel_max_squared);
 
             double g_max_scaled = g_max * g_scale;
 
             // the roots
-            double u = (double)(g_avg_x_dimensions * channel_max - (channel_sum * g_max_scaled)) / determinant;
-            double v = (double)(channel_quadratic_sum * g_max_scaled - (g_avg_x_dimensions * channel_max_squared)) / determinant;
+            double u = (g_avg_x_dimensions * channel_max - (channel_sum * g_max_scaled)) / determinant;
+            double v = (channel_quadratic_sum * g_max_scaled - (g_avg_x_dimensions * channel_max_squared)) / determinant;
 
             return (byte)(u * intensity * intensity + v * intensity);
         }
