@@ -37,6 +37,7 @@ namespace WhiteBalance
         public static Bitmap WhitePatch(Image img, double green_scale)
         {
             D_Color maxes = Maxes(img);
+            D_Color maxes_squared = MaxesSquared(img);
             D_Color means = Means(img);
             var pixel_count = img.Width * img.Height;
             // equation right side
@@ -53,8 +54,8 @@ namespace WhiteBalance
             double b_sum = Sum(img, 2);
 
             // second equation
-            uint r_max_squared = (byte)(maxes.r * maxes.r);
-            uint b_max_squared = (byte)(maxes.b * maxes.b);
+            double r_max_squared = maxes_squared.r;
+            double b_max_squared = maxes_squared.b;
 
             Bitmap bm = new Bitmap(img);
             for(int x = 0; x < bm.Width; x++)
@@ -63,9 +64,9 @@ namespace WhiteBalance
                 {
                     Color pixel = bm.GetPixel(x, y);
                     bm.SetPixel(x, y, Color.FromArgb(
-                        AdjustChannel_WhitePatch(pixel.R, r_quadratic_sum, r_sum, r_max_squared, maxes.r, g_avg_x_dimensions, maxes.g, green_scale),
+                        AdjustChannel_WhitePatch(pixel.R, r_quadratic_sum, r_sum, maxes_squared.r, maxes.r, g_avg_x_dimensions, maxes.g, green_scale),
                         pixel.G,
-                        AdjustChannel_WhitePatch(pixel.B, b_quadratic_sum, b_sum, b_max_squared, maxes.r, g_avg_x_dimensions, maxes.g, green_scale)));
+                        AdjustChannel_WhitePatch(pixel.B, b_quadratic_sum, b_sum, maxes_squared.b, maxes.b, g_avg_x_dimensions, maxes.g, green_scale)));
                 }
             }
 
@@ -85,7 +86,7 @@ namespace WhiteBalance
                 {
                     var pixel = bm.GetPixel(x, y);
                     bm.SetPixel(x, y,
-                        Color.FromArgb((byte)(alfa * pixel.R), pixel.G, (byte)(beta * pixel.B)));
+                        Color.FromArgb((byte)Math.Round((alfa * pixel.R)), pixel.G, (byte)Math.Round((beta * pixel.B))));
                 }
             }
 
@@ -138,6 +139,27 @@ namespace WhiteBalance
                         r = R > r ? R : r;
                         g = G > g ? G : g;
                         b = B > b ? B : b;
+                    }
+                }
+            }
+
+            return new D_Color { r = r, g = g, b = b };
+        }
+
+        private static D_Color MaxesSquared(Image img)
+        {
+            int r, g, b;
+            r = g = b = 0;
+            using (var bm = new Bitmap(img))
+            {
+                for(int x = 0; x < bm.Width; x++)
+                {
+                    for(int y = 0; y < bm.Height; y++)
+                    {
+                        var pixel = bm.GetPixel(x, y);
+                        r = pixel.R * pixel.R > r ? pixel.R * pixel.R : r;
+                        g = pixel.G * pixel.G > r ? pixel.G * pixel.G : g;
+                        b = pixel.B * pixel.B > b ? pixel.B * pixel.B : b;
                     }
                 }
             }

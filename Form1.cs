@@ -43,7 +43,7 @@ namespace WhiteBalance
         {
             if (OpenPicture.Image != null)
             {
-                ModifiedPicture.Image = Algorithms.WhitePatch2(OpenPicture.Image, (double)GreenScaleSpinBox.Value);
+                ModifiedPicture.Image = Algorithms.WhitePatch(OpenPicture.Image, (double)GreenScaleSpinBox.Value);
             }
         }
     }
