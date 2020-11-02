@@ -188,6 +188,7 @@
             this.IterativeButton.TabIndex = 8;
             this.IterativeButton.Text = "Iterative";
             this.IterativeButton.UseVisualStyleBackColor = true;
+            this.IterativeButton.Click += new System.EventHandler(this.IterativeButton_Click);
             // 
             // Form1
             // 

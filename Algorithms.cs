@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using white_balance;
 
 namespace WhiteBalance
 {
@@ -93,9 +94,66 @@ namespace WhiteBalance
             return bm;
         }
 
-        public static Bitmap Iterative(Image img)
+        public static Bitmap Iterative(Image img, ColorBias colorBias, double kappa)
         {
-            return new Bitmap(1, 1);
+            List<Color> gray_points = new List<Color>();
+            bool condition = false;
+            Bitmap bm = new Bitmap(img);
+            for(int x = 0; x < bm.Width; x++)
+            {
+                for(int y = 0; y < bm.Height; y++)
+                {
+                    if(condition)
+                    {
+                        gray_points.Add(bm.GetPixel(x, y));
+                    }
+                }
+            }
+
+            double u_avg = 0, v_avg = 0;
+            do
+            {
+                foreach (Color point in gray_points)
+                {
+                    double y = point.R;
+                    double u = point.G;
+                    double v = point.B;
+                    u_avg += u;
+                    v_avg += v;
+                }
+
+                if (gray_points.Count > 0)
+                {
+                    u_avg /= (double)gray_points.Count;
+                    v_avg /= (double)gray_points.Count;
+                }
+
+                for(int x = 0; x < bm.Width; x++)
+                {
+                    for(int y = 0; y < bm.Height; y++)
+                    {
+                        Color point = bm.GetPixel(x, y);
+
+                        double Y = point.R;
+                        double U = point.G;
+                        double V = point.B;
+
+                        if (u_avg > v_avg)
+                        {
+                            U *= v_avg / u_avg;
+                        }
+                        else if (v_avg > u_avg)
+                        {
+                            V *= u_avg / v_avg;
+                        }
+
+                        bm.SetPixel(x, y, Color.FromArgb((int)Y, (int)U, (int)V));
+                    }
+                }
+            }
+            while (u_avg != 0 && v_avg != 0);
+
+            return bm;
         }
 
         private static D_Color Means(Image img)

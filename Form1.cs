@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using white_balance;
 
 namespace WhiteBalance
 {
@@ -28,7 +30,16 @@ namespace WhiteBalance
         }
         private void SaveButton_Click(object sender, EventArgs e)
         {
-
+            SaveFileDialog saveFileDialog = new SaveFileDialog();
+            saveFileDialog.DefaultExt = "jpg";
+            saveFileDialog.Filter = "JPEG Images|*.jpg;*.jpeg";
+            if(saveFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                using (Bitmap bm = new Bitmap(ModifiedPicture.Image))
+                {
+                    bm.Save(saveFileDialog.FileName, ImageFormat.Jpeg);
+                }
+            }
         }
 
         private void GreyButton_Click(object sender, EventArgs e)
@@ -44,6 +55,14 @@ namespace WhiteBalance
             if (OpenPicture.Image != null)
             {
                 ModifiedPicture.Image = Algorithms.WhitePatch(OpenPicture.Image, (double)GreenScaleSpinBox.Value);
+            }
+        }
+
+        private void IterativeButton_Click(object sender, EventArgs e)
+        {
+            if(OpenPicture.Image != null)
+            {
+                ModifiedPicture.Image = Algorithms.Iterative(OpenPicture.Image, new ColorBias { R = false, G = false, B = false }, 0);
             }
         }
     }
