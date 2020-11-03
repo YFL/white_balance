@@ -30,14 +30,17 @@ namespace WhiteBalance
         }
         private void SaveButton_Click(object sender, EventArgs e)
         {
-            SaveFileDialog saveFileDialog = new SaveFileDialog();
-            saveFileDialog.DefaultExt = "jpg";
-            saveFileDialog.Filter = "JPEG Images|*.jpg;*.jpeg";
-            if(saveFileDialog.ShowDialog() == DialogResult.OK)
+            if (ModifiedPicture.Image != null)
             {
-                using (Bitmap bm = new Bitmap(ModifiedPicture.Image))
+                SaveFileDialog saveFileDialog = new SaveFileDialog();
+                saveFileDialog.DefaultExt = "jpg";
+                saveFileDialog.Filter = "JPEG Images|*.jpg;*.jpeg";
+                if (saveFileDialog.ShowDialog() == DialogResult.OK)
                 {
-                    bm.Save(saveFileDialog.FileName, ImageFormat.Jpeg);
+                    using (Bitmap bm = new Bitmap(ModifiedPicture.Image))
+                    {
+                        bm.Save(saveFileDialog.FileName, ImageFormat.Jpeg);
+                    }
                 }
             }
         }
