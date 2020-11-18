@@ -94,18 +94,30 @@ namespace WhiteBalance
             return bm;
         }
 
-        public static Bitmap Iterative(Image img, ColorBias colorBias, double kappa)
+        public static Bitmap Iterative(Image img, double param)
         {
-            List<Color> gray_points = new List<Color>();
-            bool condition = false;
+            List<YUV> pixels = new List<YUV>();
+            List<YUV> gray_points = new List<YUV>();
+
             Bitmap bm = new Bitmap(img);
             for(int x = 0; x < bm.Width; x++)
             {
                 for(int y = 0; y < bm.Height; y++)
                 {
-                    if(condition)
+                    pixels.Add(RGBtoYUV(bm.GetPixel(x, y)));
+                }
+            }
+
+            Console.WriteLine(pixels.Count + " " + bm.Width * bm.Height);
+
+            for(int x = 0; x < bm.Width; x++)
+            {
+                for(int y = 0; y < bm.Height; y++)
+                {
+                    var pixel = pixels[x / bm.Width + y];
+                    if((Math.Abs(pixel.U) + Math.Abs(pixel.V)) / pixel.Y < param)
                     {
-                        gray_points.Add(bm.GetPixel(x, y));
+                        gray_points.Add(pixel);
                     }
                 }
             }
@@ -113,13 +125,10 @@ namespace WhiteBalance
             double u_avg = 0, v_avg = 0;
             do
             {
-                foreach (Color point in gray_points)
+                foreach (YUV point in gray_points)
                 {
-                    double y = point.R;
-                    double u = point.G;
-                    double v = point.B;
-                    u_avg += u;
-                    v_avg += v;
+                    u_avg += point.U;
+                    v_avg += point.V;
                 }
 
                 if (gray_points.Count > 0)
@@ -134,20 +143,14 @@ namespace WhiteBalance
                     {
                         Color point = bm.GetPixel(x, y);
 
-                        double Y = point.R;
-                        double U = point.G;
-                        double V = point.B;
-
                         if (u_avg > v_avg)
                         {
-                            U *= v_avg / u_avg;
+                            bm.SetPixel(x, y, Color.FromArgb(point.R, point.G, (int)(point.B * v_avg / u_avg)));
                         }
                         else if (v_avg > u_avg)
                         {
-                            V *= u_avg / v_avg;
+                            bm.SetPixel(x, y, Color.FromArgb(point.R, (int)(point.G * u_avg / v_avg), point.B));
                         }
-
-                        bm.SetPixel(x, y, Color.FromArgb((int)Y, (int)U, (int)V));
                     }
                 }
             }
@@ -306,6 +309,44 @@ namespace WhiteBalance
             double v = (channel_quadratic_sum * g_max_scaled - (g_avg_x_dimensions * channel_max_squared)) / determinant;
 
             return (byte)(u * intensity * intensity + v * intensity);
+        }
+
+        private static YUV RGBtoYUV(Color c)
+        {
+            D_Color d = new D_Color();
+            d.r = c.R;
+            d.g = c.G;
+            d.b = c.B;
+
+            return DColorToYUV(d);
+        }
+
+        /** Algorithm got from https://patrickwu.space/2016/06/12/csharp-color/#rgb2yuv */
+        private static YUV DColorToYUV(D_Color d)
+        {
+            YUV yuv = new YUV();
+
+            //normalize 
+            double r = d.r / 255.0;
+            double g = d.g / 255.0;
+            double b = d.b / 255.0;
+
+            // convert
+            yuv.Y = 0.299 * r + 0.587 * g + 0.114 * b;
+            yuv.U = -0.14713 * r - 0.288886 * g + 0.436 * b;
+            yuv.V = 0.615 * r - 0.51499 * g - 0.10001 * b;
+
+            return yuv;
+        }
+
+        /** Algorithm got from https://patrickwu.space/2016/06/12/csharp-color/#yuv2rgb */
+        private static Color YUVtoRGB(YUV y)
+        {
+            int r = Math.Min(255, Convert.ToInt32((y.Y + 1.1398373983737983740 * y.V) * 255));
+            int g = Math.Min(255, Convert.ToInt32((y.Y - 0.3946517043589703515 * y.U - 0.5805986066674976801 * y.V) * 255));
+            int b = Math.Min(255, Convert.ToInt32((y.Y + 2.032110091743119266 * y.U) * 255));
+
+            return Color.FromArgb(r, g, b);
         }
     }
 }

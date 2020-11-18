@@ -65,7 +65,7 @@ namespace WhiteBalance
         {
             if(OpenPicture.Image != null)
             {
-                ModifiedPicture.Image = Algorithms.Iterative(OpenPicture.Image, new ColorBias { R = false, G = false, B = false }, 0);
+                ModifiedPicture.Image = Algorithms.Iterative(OpenPicture.Image, 0.1);
             }
         }
     }
