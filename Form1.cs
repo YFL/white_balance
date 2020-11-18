@@ -25,7 +25,21 @@ namespace WhiteBalance
             OpenFileDialog ofd = new OpenFileDialog();
             if(ofd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
+                if(OpenPicture.Image != null)
+                {
+                    OpenPicture.Image.Dispose();
+                }
+                if(ModifiedPicture.Image != null)
+                {
+                    ModifiedPicture.Image.Dispose();
+                }
+
                 OpenPicture.Image = white_balance.ImageLoader.LoadImage(ofd.FileName);
+                if(iterative_last_result != null)
+                {
+                    iterative_last_result.Dispose();
+                }
+                iterative_last_result = null;
             }
         }
         private void SaveButton_Click(object sender, EventArgs e)
@@ -49,6 +63,10 @@ namespace WhiteBalance
         {
             if(OpenPicture.Image != null)
             {
+                if(ModifiedPicture.Image != null)
+                {
+                    ModifiedPicture.Image.Dispose();
+                }
                 ModifiedPicture.Image = Algorithms.GrayWorld(OpenPicture.Image);
             }
         }
@@ -57,6 +75,10 @@ namespace WhiteBalance
         {
             if (OpenPicture.Image != null)
             {
+                if(ModifiedPicture.Image != null)
+                {
+                    ModifiedPicture.Image.Dispose();
+                }
                 ModifiedPicture.Image = Algorithms.WhitePatch(OpenPicture.Image, (double)GreenScaleSpinBox.Value);
             }
         }
@@ -65,8 +87,23 @@ namespace WhiteBalance
         {
             if(OpenPicture.Image != null)
             {
-                ModifiedPicture.Image = Algorithms.Iterative(OpenPicture.Image, 0.1);
+                Image tmp = null;
+                if(iterative_last_result != null)
+                {
+                    tmp = (Image)iterative_last_result.Clone();
+                    iterative_last_result.Dispose();
+                }
+
+                if(iterative_last_result == null)
+                {
+                    tmp = iterative_last_result = OpenPicture.Image;
+                }
+
+                ModifiedPicture.Image = iterative_last_result = Algorithms.Iterative(tmp, Convert.ToDouble(TresholdInput.Value), Convert.ToDouble(DownscaleInput.Value));
+                tmp.Dispose();
             }
         }
+
+        private Image iterative_last_result = null;
     }
 }

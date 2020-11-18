@@ -11,7 +11,7 @@ namespace WhiteBalance
 {
     public abstract class Algorithms
     {
-        public static Bitmap GrayWorld(Image img)
+        public static Bitmap GrayWorld(in Image img)
         {
             D_Color means = Means(img);
             var pixel_count = img.Width * img.Height;
@@ -35,7 +35,7 @@ namespace WhiteBalance
             return ret;
         }
 
-        public static Bitmap WhitePatch(Image img, double green_scale)
+        public static Bitmap WhitePatch(in Image img, double green_scale)
         {
             D_Color maxes = Maxes(img);
             D_Color maxes_squared = MaxesSquared(img);
@@ -74,7 +74,7 @@ namespace WhiteBalance
             return bm;
         }
 
-        public static Bitmap WhitePatch2(Image img, double green_scale)
+        public static Bitmap WhitePatch2(in Image img, double green_scale)
         {
             D_Color maxes = Maxes(img);
             double alfa = maxes.g / maxes.r;
@@ -94,7 +94,7 @@ namespace WhiteBalance
             return bm;
         }
 
-        public static Bitmap Iterative(Image img, double param)
+        public static Bitmap Iterative(in Image img, double nu, double down_scale)
         {
             List<YUV> pixels = new List<YUV>();
             List<YUV> gray_points = new List<YUV>();
@@ -114,8 +114,8 @@ namespace WhiteBalance
             {
                 for(int y = 0; y < bm.Height; y++)
                 {
-                    var pixel = pixels[x / bm.Width + y];
-                    if((Math.Abs(pixel.U) + Math.Abs(pixel.V)) / pixel.Y < param)
+                    var pixel = pixels[y * bm.Width + x];
+                    if((Math.Abs(pixel.U) + Math.Abs(pixel.V)) / pixel.Y < nu)
                     {
                         gray_points.Add(pixel);
                     }
@@ -123,43 +123,42 @@ namespace WhiteBalance
             }
 
             double u_avg = 0, v_avg = 0;
-            do
+            foreach (YUV point in gray_points)
             {
-                foreach (YUV point in gray_points)
-                {
-                    u_avg += point.U;
-                    v_avg += point.V;
-                }
+                u_avg += point.U;
+                v_avg += point.V;
+            }
 
-                if (gray_points.Count > 0)
-                {
-                    u_avg /= (double)gray_points.Count;
-                    v_avg /= (double)gray_points.Count;
-                }
+            if (gray_points.Count > 0)
+            {
+                u_avg /= (double)gray_points.Count;
+                v_avg /= (double)gray_points.Count;
+            }
 
-                for(int x = 0; x < bm.Width; x++)
+            for(int x = 0; x < bm.Width; x++)
+            {
+                for(int y = 0; y < bm.Height; y++)
                 {
-                    for(int y = 0; y < bm.Height; y++)
+                    Color point = bm.GetPixel(x, y);
+                    YUV yuv = RGBtoYUV(point);
+
+                    if (u_avg > v_avg)
                     {
-                        Color point = bm.GetPixel(x, y);
-
-                        if (u_avg > v_avg)
-                        {
-                            bm.SetPixel(x, y, Color.FromArgb(point.R, point.G, (int)(point.B * v_avg / u_avg)));
-                        }
-                        else if (v_avg > u_avg)
-                        {
-                            bm.SetPixel(x, y, Color.FromArgb(point.R, (int)(point.G * u_avg / v_avg), point.B));
-                        }
+                        yuv.U *= down_scale;
                     }
+                    else if (v_avg > u_avg)
+                    {
+                        yuv.V *= down_scale;
+                    }
+
+                    bm.SetPixel(x, y, YUVtoRGB(yuv));
                 }
             }
-            while (u_avg != 0 && v_avg != 0);
 
             return bm;
         }
 
-        private static D_Color Means(Image img)
+        private static D_Color Means(in Image img)
         {
             double r, g, b;
             r = g = b = 0;
@@ -184,7 +183,7 @@ namespace WhiteBalance
             return new D_Color { r = r, g = g, b = b };
         }
 
-        private static D_Color Maxes(Image img)
+        private static D_Color Maxes(in Image img)
         {
             int r, g, b;
             r = g = b = 0;
@@ -207,7 +206,7 @@ namespace WhiteBalance
             return new D_Color { r = r, g = g, b = b };
         }
 
-        private static D_Color MaxesSquared(Image img)
+        private static D_Color MaxesSquared(in Image img)
         {
             int r, g, b;
             r = g = b = 0;
@@ -248,7 +247,7 @@ namespace WhiteBalance
         * @param channel allowed values = {0, 1, 2} 0 - red, ... ,2 - blue
         * @return the sum of the intensities of the given channel
         */
-        private static double Sum(Image img, byte channel)
+        private static double Sum(in Image img, byte channel)
         {
             double sum = 0;
             using (var bm = new Bitmap(img))
@@ -272,7 +271,7 @@ namespace WhiteBalance
          * @param channel allowed values = {0, 1, 2} 0 - red, ... ,2 - blue
          * @return the sum of the square of the intensities of the given channel
          */
-        private static double QuadraticSum(Image img, byte channel)
+        private static double QuadraticSum(in Image img, byte channel)
         {
             double sum = 0;
             using (var bm = new Bitmap(img))
