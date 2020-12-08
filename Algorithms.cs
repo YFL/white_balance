@@ -11,28 +11,30 @@ namespace WhiteBalance
 {
     public abstract class Algorithms
     {
+        static DirectBitmap FasterBM;
         public static Bitmap GrayWorld(in Image img)
         {
             D_Color means = Means(img);
             var pixel_count = img.Width * img.Height;
             double r_factor = means.g / means.r;
             double b_factor = means.g / means.b;
-
+            FasterBM = new DirectBitmap(img.Width, img.Height);
             var original = new Bitmap(img);
             var ret = new Bitmap(img.Width, img.Height);
+
 
             for(int x = 0; x < img.Width; x++)
             {
                 for(int y = 0; y < img.Height; y++)
                 {
-                    ret.SetPixel(x, y, Color.FromArgb(
+                    FasterBM.SetPixel(x, y, Color.FromArgb(
                         Math.Max(0, Math.Min(255, (int)(original.GetPixel(x, y).R / r_factor))),
                         original.GetPixel(x, y).G,
                         Math.Max(0, Math.Min(255, (int)(original.GetPixel(x, y).B / b_factor)))));
                 }
             }
 
-            return ret;
+            return FasterBM.Bitmap;
         }
 
         public static Bitmap WhitePatch(in Image img, double green_scale)
@@ -42,7 +44,7 @@ namespace WhiteBalance
             D_Color means = Means(img);
             var pixel_count = img.Width * img.Height;
             // equation right side
-
+            FasterBM = new DirectBitmap(img.Width, img.Height);
             // first equation
             double g_avg_x_dimensions = means.g * pixel_count;
 
@@ -64,14 +66,14 @@ namespace WhiteBalance
                 for(int y = 0; y < bm.Height; y++)
                 {
                     Color pixel = bm.GetPixel(x, y);
-                    bm.SetPixel(x, y, Color.FromArgb(
+                    FasterBM.SetPixel(x, y, Color.FromArgb(
                         AdjustChannel_WhitePatch(pixel.R, r_quadratic_sum, r_sum, maxes_squared.r, maxes.r, g_avg_x_dimensions, maxes.g, green_scale),
                         pixel.G,
                         AdjustChannel_WhitePatch(pixel.B, b_quadratic_sum, b_sum, maxes_squared.b, maxes.b, g_avg_x_dimensions, maxes.g, green_scale)));
                 }
             }
 
-            return bm;
+            return FasterBM.Bitmap;
         }
 
         public static Bitmap WhitePatch2(in Image img, double green_scale)
@@ -86,19 +88,19 @@ namespace WhiteBalance
                 for (int y = 0; y < bm.Height; y++)
                 {
                     var pixel = bm.GetPixel(x, y);
-                    bm.SetPixel(x, y,
+                    FasterBM.SetPixel(x, y,
                         Color.FromArgb((byte)Math.Round((alfa * pixel.R)), pixel.G, (byte)Math.Round((beta * pixel.B))));
                 }
             }
 
-            return bm;
+            return FasterBM.Bitmap;
         }
 
         public static Bitmap Iterative(in Image img, double nu, double down_scale)
         {
             List<YUV> pixels = new List<YUV>();
             List<YUV> gray_points = new List<YUV>();
-
+            FasterBM = new DirectBitmap(img.Width, img.Height);
             Bitmap bm = new Bitmap(img);
             for(int x = 0; x < bm.Width; x++)
             {
@@ -151,11 +153,11 @@ namespace WhiteBalance
                         yuv.V *= down_scale;
                     }
 
-                    bm.SetPixel(x, y, YUVtoRGB(yuv));
+                    FasterBM.SetPixel(x, y, YUVtoRGB(yuv));
                 }
             }
 
-            return bm;
+            return FasterBM.Bitmap;
         }
 
         private static D_Color Means(in Image img)
@@ -327,7 +329,7 @@ namespace WhiteBalance
 
             //normalize 
             double r = d.r / 255.0;
-            double g = d.g / 255.0;
+            double g = d.g / 255.0; 
             double b = d.b / 255.0;
 
             // convert
@@ -342,8 +344,11 @@ namespace WhiteBalance
         private static Color YUVtoRGB(YUV y)
         {
             int r = Math.Min(255, Convert.ToInt32((y.Y + 1.1398373983737983740 * y.V) * 255));
+            r = Math.Max(r, 0);
             int g = Math.Min(255, Convert.ToInt32((y.Y - 0.3946517043589703515 * y.U - 0.5805986066674976801 * y.V) * 255));
+            g = Math.Max(g, 0);
             int b = Math.Min(255, Convert.ToInt32((y.Y + 2.032110091743119266 * y.U) * 255));
+            b = Math.Max(b, 0);
 
             return Color.FromArgb(r, g, b);
         }

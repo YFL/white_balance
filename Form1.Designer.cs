@@ -121,7 +121,7 @@
             this.GreyButton.Name = "GreyButton";
             this.GreyButton.Size = new System.Drawing.Size(80, 25);
             this.GreyButton.TabIndex = 4;
-            this.GreyButton.Text = "Grey";
+            this.GreyButton.Text = "Run\r\n";
             this.GreyButton.UseVisualStyleBackColor = true;
             this.GreyButton.Click += new System.EventHandler(this.GreyButton_Click);
             // 
@@ -141,7 +141,7 @@
             // 
             this.GreenScaleSpinBox.DecimalPlaces = 2;
             this.GreenScaleSpinBox.Increment = new decimal(new int[] {
-            5,
+            1,
             0,
             0,
             65536});
@@ -171,7 +171,7 @@
             this.WhiteButton.Name = "WhiteButton";
             this.WhiteButton.Size = new System.Drawing.Size(80, 25);
             this.WhiteButton.TabIndex = 8;
-            this.WhiteButton.Text = "White";
+            this.WhiteButton.Text = "Run";
             this.WhiteButton.UseVisualStyleBackColor = true;
             this.WhiteButton.Click += new System.EventHandler(this.WhiteButton_Click);
             // 
@@ -195,18 +195,18 @@
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(6, 38);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(74, 17);
+            this.label2.Size = new System.Drawing.Size(76, 17);
             this.label2.TabIndex = 12;
-            this.label2.Text = "downscale";
+            this.label2.Text = "Downscale";
             // 
             // label1
             // 
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(3, 10);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(126, 17);
+            this.label1.Size = new System.Drawing.Size(129, 17);
             this.label1.TabIndex = 11;
-            this.label1.Text = "gray point treshold";
+            this.label1.Text = "Gray point treshold";
             // 
             // DownscaleInput
             // 
@@ -250,7 +250,7 @@
             this.IterativeButton.Name = "IterativeButton";
             this.IterativeButton.Size = new System.Drawing.Size(80, 25);
             this.IterativeButton.TabIndex = 8;
-            this.IterativeButton.Text = "Iterative";
+            this.IterativeButton.Text = "Run";
             this.IterativeButton.UseVisualStyleBackColor = true;
             this.IterativeButton.Click += new System.EventHandler(this.IterativeButton_Click);
             // 
@@ -259,14 +259,15 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
-            this.ClientSize = new System.Drawing.Size(1183, 706);
+            this.BackColor = System.Drawing.SystemColors.Control;
+            this.ClientSize = new System.Drawing.Size(1182, 703);
             this.Controls.Add(this.OpenButton);
             this.Controls.Add(this.SaveButton);
             this.Controls.Add(this.tabControl1);
             this.Controls.Add(this.ModifiedPicture);
             this.Controls.Add(this.OpenPicture);
             this.Name = "Form1";
-            this.Text = "Form1";
+            this.Text = "White Balance";
             ((System.ComponentModel.ISupportInitialize)(this.OpenPicture)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.ModifiedPicture)).EndInit();
             this.tabControl1.ResumeLayout(false);
