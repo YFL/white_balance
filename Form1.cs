@@ -96,7 +96,12 @@ namespace WhiteBalance
 
                 if(iterative_last_result == null)
                 {
-                    tmp = iterative_last_result = OpenPicture.Image;
+                    tmp = iterative_last_result = (Image)OpenPicture.Image.Clone();
+                }
+
+                if(ModifiedPicture.Image != null)
+                {
+                    ModifiedPicture.Image.Dispose();
                 }
 
                 ModifiedPicture.Image = iterative_last_result = Algorithms.Iterative(tmp, Convert.ToDouble(TresholdInput.Value), Convert.ToDouble(DownscaleInput.Value));

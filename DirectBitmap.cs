@@ -1,15 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
-using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
 
 namespace white_balance
 {
-    
-        public class DirectBitmap : IDisposable
+
+    public class DirectBitmap : IDisposable
         {
             public Bitmap Bitmap { get; private set; }
             public Int32[] Bits { get; private set; }
