@@ -76,25 +76,25 @@ namespace WhiteBalance
             return FasterBM.Bitmap;
         }
 
-        public static Bitmap WhitePatch2(in Image img, double green_scale)
-        {
-            D_Color maxes = Maxes(img);
-            double alfa = maxes.g / maxes.r;
-            double beta = maxes.g / maxes.b;
+        //public static Bitmap WhitePatch2(in Image img, double green_scale)
+        //{
+        //    D_Color maxes = Maxes(img);
+        //    double alfa = maxes.g / maxes.r;
+        //    double beta = maxes.g / maxes.b;
+        //
+        //    Bitmap bm = new Bitmap(img);
+        //    for (int x = 0; x < bm.Width; x++)
+        //    {
+        //        for (int y = 0; y < bm.Height; y++)
+        //        {
+        //            var pixel = bm.GetPixel(x, y);
+        //            FasterBM.SetPixel(x, y,
+        //                Color.FromArgb((byte)Math.Round((alfa * pixel.R)), pixel.G, (byte)Math.Round((beta * pixel.B))));
+        //        }
+        //    }
 
-            Bitmap bm = new Bitmap(img);
-            for (int x = 0; x < bm.Width; x++)
-            {
-                for (int y = 0; y < bm.Height; y++)
-                {
-                    var pixel = bm.GetPixel(x, y);
-                    FasterBM.SetPixel(x, y,
-                        Color.FromArgb((byte)Math.Round((alfa * pixel.R)), pixel.G, (byte)Math.Round((beta * pixel.B))));
-                }
-            }
-
-            return FasterBM.Bitmap;
-        }
+        //    return FasterBM.Bitmap;
+        //}
 
         public static Bitmap Iterative(in Image img, double nu, double down_scale)
         {
