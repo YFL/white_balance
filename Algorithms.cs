@@ -28,9 +28,9 @@ namespace WhiteBalance
                 for(int y = 0; y < img.Height; y++)
                 {
                     FasterBM.SetPixel(x, y, Color.FromArgb(
-                        Math.Max(0, Math.Min(255, (int)(original.GetPixel(x, y).R / r_factor))),
+                        Math.Max(0, Math.Min(255, (int)(original.GetPixel(x, y).R * r_factor))),
                         original.GetPixel(x, y).G,
-                        Math.Max(0, Math.Min(255, (int)(original.GetPixel(x, y).B / b_factor)))));
+                        Math.Max(0, Math.Min(255, (int)(original.GetPixel(x, y).B * b_factor)))));
                 }
             }
 

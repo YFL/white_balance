@@ -63,6 +63,12 @@ namespace WhiteBalance
         {
             if(OpenPicture.Image != null)
             {
+                if(iterative_last_result != null)
+                {
+                    iterative_last_result.Dispose();
+                    iterative_last_result = null;
+                }
+
                 if(ModifiedPicture.Image != null)
                 {
                     ModifiedPicture.Image.Dispose();
@@ -75,7 +81,13 @@ namespace WhiteBalance
         {
             if (OpenPicture.Image != null)
             {
-                if(ModifiedPicture.Image != null)
+                if (iterative_last_result != null)
+                {
+                    iterative_last_result.Dispose();
+                    iterative_last_result = null;
+                }
+
+                if (ModifiedPicture.Image != null)
                 {
                     ModifiedPicture.Image.Dispose();
                 }
